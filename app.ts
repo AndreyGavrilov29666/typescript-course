@@ -1388,58 +1388,1066 @@
 
 // Декоратор параметра  and metadata
 
-interface IUserService {
-    getUsersFromDb(): number
-}
+// import 'reflect-metadata'
+//
+// const POSITIVE_METADATA_KEY = Symbol('POSITIVE_METADATA_KEY')
+//
+// interface IUserService {
+//     getUsersFromDb(): number
+// }
+//
+// class UserService implements IUserService {
+//     private _users: number
+//     constructor(users: number = 1000) {
+//         this._users = users
+//     }
+//
+//     getUsersFromDb(): number {
+//         return this._users
+//     }
+//
+//     @Validate()
+//     setUsersInDb(@Positive() num:number): void {
+//         this._users = num
+//     }
+// }
+// function Positive() {
+//     return (
+//         target: Object,
+//         propertyKey: string | symbol,  // propertyKey
+//         parameterIndex:number
+//     ) => {
+//         console.log(Reflect.getOwnMetadata('design:type', target,propertyKey))
+//         console.log(Reflect.getOwnMetadata('design:paramtypes', target,propertyKey))
+//         console.log(Reflect.getOwnMetadata('design:returntype', target,propertyKey))
+//         console.log('_________________')
+//         console.log(target)
+//         console.log(propertyKey)
+//         console.log(parameterIndex)
+//         let existParams:number[] = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target,propertyKey) || []
+//         existParams.push(parameterIndex)
+//         Reflect.defineMetadata(POSITIVE_METADATA_KEY, existParams, target, propertyKey)
+//     }
+// }
+// function Validate(){
+//     return (
+//         target: Object,
+//         propertyKey: string | symbol,  // propertyKey
+//         descriptor:TypedPropertyDescriptor<(...args: any[]) => any>
+//     ) => {
+//         let method = descriptor.value;
+//         descriptor.value = function (...args:any) {
+//             let positiveParams:number[] = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target,propertyKey);
+//             if(positiveParams) {
+//                 for(let index of positiveParams) {
+//                     if(args[index] < 0 ) {
+//                         throw  new Error(' Number must be more than 0')
+//                     }
+//                 }
+//             }
+//             return method?.apply(this, args)
+//         }
+//     }
+// }
+// const userService = new UserService();
+// userService.setUsersInDb(10)
+// userService.setUsersInDb(-1)
+// console.log(userService)
 
-class UserService implements IUserService {
-    private _users: number
-    constructor(users: number = 1000) {
-        this._users = users
-    }
 
-    getUsersFromDb(): number {
-        return this._users
-    }
+// function Uni(name:string): any {
+//     console.log('initial' + ' ' + name)
+//     return function (){
+//         console.log('call' + ' ' + name)
+//     }
+// }
+//
+// @Uni('class')
+// class MyClass {
+//     @Uni('prop')
+//     props?: any
+//
+//     @Uni('static prop')
+//     static prop2?:any
+//
+//     @Uni('static method')
+//     static method2(@Uni('static method param')_:any) {
+//     }
+//
+//     @Uni('method')
+//     method(@Uni('method param')_:any) {
+//     }
+//
+//     constructor(@Uni('constructor param') _:any) {
+//     }
+//
+//
+// }
 
-    setUsersInDb(@Positive() num:number): void {
-        this._users = num
-    }
-}
-
-function Positive() {
-    return (
-        target: Object,
-        propertyKey: string | symbol,  // propertyKey
-        parameterIndex:number
-    ) => {
-        console.log(target)
-        console.log(propertyKey)
-        console.log(parameterIndex)
-    }
-}
-
-const userService = new UserService();
-
-
-
-
-
-
-
-
-
-
+// import {toJson} from 'really-relaxed-json'
+// const rjson = '[ one two three {foo:bar} ]'
+// const json = toJson(rjson)
+// // json value is ["one", "two", "three", {"foo": "bar"}]
+//
+// console.log(json)
 
 
+// interface IInsurance {
+//     id:number
+//     status:string
+//     setVehicle(vehicle:any):void
+//     submit(): Promise<boolean>
+// }
+//
+// class TFInsurance implements  IInsurance {
+//     id: number;
+//     status: string;
+//     private vehicle:any;
+//
+//     setVehicle(vehicle: any): void {
+//         this.vehicle = vehicle
+//     }
+//
+//     async submit(): Promise<boolean> {
+//         const res =  await fetch('I',
+//             {
+//                 method: 'POST',
+//                 body: JSON.stringify({vehicle:this.vehicle})
+//             }
+//             )
+//         const data = await res.json()
+//         return data.isSuccess
+//     }
+//
+// }
+//
+//
+// class ABInsurance implements  IInsurance {
+//     id: number;
+//     status: string;
+//     private vehicle:any;
+//
+//     setVehicle(vehicle: any): void {
+//         this.vehicle = vehicle
+//     }
+//
+//     async submit(): Promise<boolean> {
+//         const res =  await fetch('ab',
+//             {
+//                 method: 'POST',
+//                 body: JSON.stringify({vehicle:this.vehicle})
+//             }
+//         )
+//         const data = await res.json()
+//         return data.yes
+//     }
+//
+// }
+//
+// abstract class InsuranceFactory {
+//     db:any
+//     abstract createInsurance(): IInsurance
+//
+//     saveHistory(ins:IInsurance) {
+//         this.db.save(ins.id, ins.status)
+//     }
+// }
+//
+//
+// class TFInsuranceFactory extends InsuranceFactory {
+//     override createInsurance(): TFInsurance {
+//         return new TFInsurance()
+//     }
+// }
+//
+// class ABInsuranceFactory extends InsuranceFactory {
+//     override createInsurance(): ABInsurance {
+//         return new ABInsurance()
+//     }
+// }
+//
+// const tfInsuranceFactory = new TFInsuranceFactory();
+// const ins = tfInsuranceFactory.createInsurance()
+// tfInsuranceFactory.saveHistory(ins)
+//
+//
+// const INSURANCE_TYPE = {
+//     tf: TFInsurance,
+//     ab:ABInsurance
+// }
+//
+// type IT = typeof INSURANCE_TYPE
+//
+// class InsuranceFactoryAlt {
+//     db:any
+//     createInsurance<T extends keyof IT>(type:T): IT[T]{
+// return INSURANCE_TYPE[type]
+//     }
+//
+//     saveHistory(ins:IInsurance) {
+//         this.db.save(ins.id, ins.status)
+//     }
+// }
+//
+// const insuranceFactoryAlt = new InsuranceFactoryAlt();
+// const ins2 = new (insuranceFactoryAlt.createInsurance('tf'))
+// insuranceFactoryAlt.saveHistory(ins2)
+
+// class MyMap {
+//
+//     private static instance: MyMap;
+//     map:Map<number, string> = new Map();
+//
+//     private constructor() {
+//
+//     }
+//
+//     clean() {
+//         this.map = new Map()
+//     }
+//
+//     public static get(): MyMap {
+//         if(!MyMap.instance){
+//             MyMap.instance = new MyMap()
+//         }
+//         return MyMap.instance
+//     }
+// }
+//
+// class Service1 {
+//     addMap(key:number, value:string) {
+//         const myMap = MyMap.get()
+//         myMap.map.set(key,value)
+//     }
+// }
+//
+// class Service2 {
+//     getKeys(key:number) {
+//         const myMap = MyMap.get()
+//        const keys =  myMap.map.get(key)
+//         console.log('keys')
+//         console.log(keys)
+//         myMap.clean()
+//         const keys2 =  myMap.map.get(key)
+//         console.log('keys2')
+//         console.log(keys2)
+//     }
+// }
+//
+//
+// new Service1().addMap(1, 'work');
+// new Service2().getKeys(1)
+// interface Prototype<T> {
+//     clone():T
+// }
+// class UserHistory implements Prototype<UserHistory> {
+//     createdAt:Date;
+//     constructor(public email:string, public name:string) {
+//         this.createdAt = new Date()
+//     }
+//     clone(): UserHistory {
+//         let target = new UserHistory(this.email,this.name);
+//         target.createdAt = this.createdAt
+//         return target
+//     }
+// }
+// let user = new UserHistory('aa', 'bb')
+// console.log(user)
+// const user2 = user.clone();
+// console.log(user2)
+
+// enum ImgFormats {
+//     Png = 'png',
+//     Jpeg = 'jpeg'
+// }
+//
+// interface IResolution {
+//     width:number
+//     height:number
+// }
+//
+// interface IImageConversion extends IResolution{
+// format:ImgFormats
+// }
+//
+// class ImageBuilder {
+//     private formats: ImgFormats[]=[];
+//     private resolutions: IResolution[]=[];
+//
+//     addPng():ImageBuilder {
+//         if(this.formats.includes(ImgFormats.Png)){
+//             return this
+//         }
+//         this.formats.push(ImgFormats.Png)
+//         return this
+//     }
+//
+//     addJpeg():ImageBuilder {
+//         if(this.formats.includes(ImgFormats.Jpeg)){
+//             return this
+//         }
+//         this.formats.push(ImgFormats.Jpeg)
+//         return this
+//     }
+//
+//     addResolution(width:number,height:number):ImageBuilder {
+//         this.resolutions.push({width,height})
+//         return this
+//     }
+//
+//     build(): IImageConversion[] {
+//         const res: IImageConversion[] = [];
+//         for(const r of this.resolutions) {
+//             for(const f  of this.formats) {
+//                 res.push({
+//                     format: f,
+//                     width: r.width,
+//                     height: r.height
+//                 })
+//             }
+//         }
+//         return res
+//
+//     }
+// }
+// console.log(
+//     new ImageBuilder()
+//         .addJpeg()
+//         .addPng()
+//         .addResolution(100,50)
+//         .addResolution(200,100)
+//         .addJpeg()
+//         .build()
+// )
+
+// interface IProvider {
+//     sendMessage(message: string): void
+//
+//     connect(config: unknown): void
+//
+//     disconnect(): void
+// }
+//
+// class TelegramProvider implements IProvider {
+//     sendMessage(message: string) {
+//         console.log('message')
+//     }
+//
+//     connect(config: string) {
+//         console.log(config)
+//     }
+//
+//     disconnect() {
+//         console.log('disconnect telegram')
+//     }
+// }
+//
+// class WhatsUpProvider implements IProvider {
+//     sendMessage(message: string) {
+//         console.log('message')
+//     }
+//
+//     connect(config: string) {
+//         console.log(config)
+//     }
+//
+//     disconnect() {
+//         console.log('disconnect whats up')
+//     }
+// }
+//
+// class NotificationSender {
+//     constructor(private provider: IProvider) {
+//     }
+//
+//     send() {
+//         this.provider.connect('conn')
+//         this.provider.sendMessage('msg')
+//         this.provider.disconnect()
+//     }
+// }
+//
+// class delayNotificationSender extends NotificationSender {
+//     constructor(provider: IProvider) {
+//         super(provider)
+//     }
+//
+//     sendDelayed() {
+//
+//     }
+// }
+//
+// const telegramSender = new NotificationSender(new TelegramProvider())
+// telegramSender.send()
+//
+// const whatsUpSender = new NotificationSender(new WhatsUpProvider())
+// whatsUpSender.send()
+// class Notify {
+//     send(template: string, to: string) {
+//         console.log('Sendind' + template + ':' + to)
+//     }
+// }
+// class Log {
+//     log(msg: string) {
+//         console.log('log' + msg)
+//     }
+// }
+// class Template {
+//     private template = [
+//         {name: 'other', template: '<h1> Template! </h1>'}
+//     ]
+//
+//     getByName(name: string) {
+//         return this.template.find((t) => t.name === name)
+//     }
+// }
+// class NotificationFacade {
+//     private notify: Notify
+//     private logger: Log
+//     private template: Template
+//
+//     constructor() {
+//         this.notify = new Notify()
+//         this.logger = new Log()
+//         this.template = new Template()
+//     }
+//
+//     send(to: string, templateName: string) {
+//         const data = this.template.getByName(templateName)
+//         if (!data) {
+//             this.logger.log('No template found')
+//             return
+//         }
+//         this.notify.send(data.template, to)
+//         this.logger.log('Template was sent')
+//     }
+// }
+// const s = new NotificationFacade()
+// s.send('aaaaa', 'other')
+
+// adapter
+// class KVDatabase {
+//     private db: Map<string,string> = new Map();
+//     save(key:string, value:string) {
+//         console.log('123123')
+//         this.db.set(key,value)
+//     }
+// }
+//
+// class PersistentDb {
+//     savePersistent(data: Object) {
+//         console.log('data')
+//         console.log(data)
+//     }
+// }
+//
+// class PersistentAdapter extends KVDatabase {
+//     constructor(private database: PersistentDb) {
+//         super();
+//     }
+//     override save(key:string,value:string):void {
+//         this.database.savePersistent({key,value})
+//     }
+// }
+//
+// function run(base:KVDatabase) {
+//     base.save('key', 'value')
+// }
+// run(new PersistentAdapter(new PersistentDb))
+// run(new KVDatabase)
+
+// Proxy
+// interface IPaymentAPI {
+//     getPaymentDetail(id:number): IPaymentDetail | undefined
+// }
+//
+// interface IPaymentDetail {
+//     id:number;
+//     sum:number;
+// }
+//
+// class PaymentAPI implements IPaymentAPI {
+//     private data = [{id:1, sum:10000}]
+//     getPaymentDetail(id: number): IPaymentDetail | undefined {
+//     return  this.data.find(d => d.id === id)
+//     }
+// }
+//
+//
+// class PaymentAccessProxy implements IPaymentAPI{
+//     constructor(private api:PaymentAPI, private userId:number) {
+//     }
+//     getPaymentDetail(id: number): IPaymentDetail | undefined {
+//         if(this.userId === 1) {
+//             return this.api.getPaymentDetail(id)
+//         }
+//         console.log('Wrong access')
+//         return  undefined
+//     }
+// }
+//
+// const proxy = new PaymentAccessProxy(new PaymentAPI(), 1)
+// console.log(proxy.getPaymentDetail(1))
+//
+// const proxy2 = new PaymentAccessProxy(new PaymentAPI(), 2)
+// console.log(proxy2.getPaymentDetail(1))
+
+// Composite
+
+// abstract class DeliveryItem {
+//     items:DeliveryItem[]=[]
+//
+//     addItem(item:DeliveryItem) {
+//         this.items.push(item)
+//     }
+//     getItemPrices():number {
+//         console.log(this.items)
+//         return this.items.reduce((acc:number,item:DeliveryItem)=> acc += item.getPrice(),0)
+//
+//     }
+//
+//     abstract getPrice():number
+//
+// }
+//
+// class DeliveryShop extends DeliveryItem {
+//     constructor(private deliveryFee:number) {
+//         super();
+//     }
+//
+//     override getPrice(): number {
+//         return this.getItemPrices() + this.deliveryFee
+//     }
+// }
+//
+// class Package extends DeliveryItem {
+//     override getPrice(): number {
+//         return this.getItemPrices()
+//     }
+// }
+//
+// class Product extends DeliveryItem {
+//     constructor(private price:number) {
+//         super();
+//     }
+//
+//     override getPrice(): number {
+//         return this.price
+//     }
+// }
+//
+// const shop = new DeliveryShop(100)
+//
+// shop.addItem(new Product(1000))
+// const pack1 = new Package()
+// pack1.addItem(new Product(200))
+// pack1.addItem(new Product(300))
+// shop.addItem(pack1)
+// const pack2 = new Package()
+// pack2.addItem(new Product(30))
+// shop.addItem(pack2)
+// console.log(shop.getPrice())
+
+// chain of command
+// interface IMiddleware {
+//     next(mid:IMiddleware) : IMiddleware
+//     handle(req:any):any
+// }
+//
+// abstract class AbstractMiddleware implements IMiddleware{
+//     private nextMiddleware:IMiddleware
+//     next(mid: IMiddleware): IMiddleware {
+//         this.nextMiddleware = mid;
+//         return mid
+//     }
+//     handle(req: any): any {
+//         if(this.nextMiddleware) {
+//             return this.nextMiddleware.handle(req)
+//         }
+//         return;
+//     }
+// }
+//
+// class AuthMiddleware extends AbstractMiddleware {
+//     override handle(req: any): any {
+//         console.log('AuthMiddleware')
+//         if(req.userId === 1) {
+//             return super.handle(req)
+//         }
+//         return {error:'not authorized'}
+//     }
+// }
+//
+// class ValidateMiddleware extends AbstractMiddleware {
+//     override handle(req: any): any {
+//         console.log('ValidateMiddleware')
+//         if(req.body) {
+//             return super.handle(req)
+//         }
+//         return {error:'no body'}
+//     }
+// }
+//
+// class Controller extends AbstractMiddleware {
+//     override handle(req: any): any {
+//         console.log('Controller')
+//         return {data:req}
+//     }
+// }
+//
+// const controller = new Controller()
+// const validate = new ValidateMiddleware()
+// const auth = new AuthMiddleware()
+//
+// auth.next(validate).next(controller);
+//
+// console.log(auth.handle({
+//     userId:1,
+//     body:{}
+// }))
+
+//Mediator
+// interface Mediator {
+//     notify(sender:string, event:string):void
+// }
+//
+// abstract class Mediated {
+//     mediator:Mediator
+//     setMediator(mediator:Mediator){
+//         this.mediator = mediator
+//     }
+// }
+//
+// class Notifications {
+//      send(){
+//          console.log('Sending notification')
+//      }
+// }
+//
+//
+// class Log {
+//     log(msg:string) {
+//         console.log('msg ' + msg)
+//     }
+// }
+//
+// class EventHandler  extends Mediated{
+//     myEvent() {
+// this.mediator.notify('EventHandler', 'myEvent')
+//     }
+// }
+//
+// class NotificationMediator implements Mediator {
+//     constructor(public notifications: Notifications, public  logger:Log, public handler: EventHandler ) {
+//     }
+//     notify(sender: string, event: string) {
+//         switch (event) {
+//             case 'myEvent':
+//                 this.notifications.send()
+//                 this.logger.log('Sended')
+//                 break;
+//         }
+//     }
+// }
+//
+// const handler = new EventHandler()
+// const logger = new Log()
+// const notifications = new Notifications()
+//
+// const m = new NotificationMediator(notifications,logger,handler)
+// handler.setMediator(m)
+// handler.myEvent()
+
+// Command
+
+// class User {
+//     constructor(public userId:number) {
+//     }
+// }
+//
+// class CommandHistory {
+//    public commands: Command[]=[]
+//     push(command:Command){
+//        this.commands.push(command)
+//     }
+//     remove(command:Command){
+//        this.commands= this.commands.filter(c => c.commandId !== command.commandId)
+//     }
+// }
+//
+// abstract class Command {
+//     public commandId: number;
+//     abstract execute():void
+//     constructor(public history:CommandHistory) {
+//         this.commandId = Math.random()
+//     }
+// }
+//
+// class AddUserCommand extends Command {
+//     constructor(private user:User,private receiver: UserService, history:CommandHistory) {
+//         super(history);
+//     }
+//
+//     execute() {
+//         this.receiver.saveUser(this.user)
+//         this.history.push(this)
+//     }
+//
+//     undo() {
+//         this.receiver.deleteUser(this.user.userId)
+//         this.history.remove(this)
+//     }
+// }
+//
+// class UserService {
+//     saveUser(user:User){
+//         console.log('Saving user with id: ' + user.userId  )
+//     }
+//
+//     deleteUser(userId:number) {
+//         console.log('Delete user with id ' + userId)
+//     }
+// }
+//
+// class Controller {
+//     receiver:UserService
+//     history:CommandHistory = new CommandHistory()
+//     addReceiver(receiver:UserService) {
+//         this.receiver = receiver
+//     }
+//     run() {
+//         const addUserCommand = new AddUserCommand(new User(1), this.receiver,this.history)
+//         addUserCommand.execute()
+//         console.log(addUserCommand.history)
+//         addUserCommand.undo();
+//         console.log(addUserCommand.history)
+//     }
+// }
+//
+// const controller = new Controller()
+// controller.addReceiver(new UserService())
+// controller.run()
+
+// State
+
+// class DocumentItem {
+//     public text:string
+//     private state: DocumentItemState;
+//
+//     constructor() {
+//         this.setState(new DraftDocumentItemState())
+//     }
+//     getState() {
+//         return this.state
+//     }
+//
+//     setState(state:DocumentItemState) {
+//         this.state = state
+//         this.state.setContext(this)
+//     }
+//     publishDoc(){
+//         this.state.publish()
+//     }
+//     deleteDoc() {
+//         this.state.delete()
+//     }
+// }
+//
+// abstract class DocumentItemState {
+//     public name:string;
+//     public item: DocumentItem
+//
+//     public setContext(item:DocumentItem) {
+//         this.item = item
+//     }
+//     public abstract publish(): void
+//     public abstract delete(): void
+// }
+//
+// class DraftDocumentItemState extends DocumentItemState{
+//     constructor() {
+//         super()
+//         this.name = 'DraftDocument'
+//     }
+//
+//     public publish() {
+//         console.log('Text sent to site with: ' + this.item.text)
+//         this.item.setState(new PublishDocumentItemState())
+//     }
+//     public delete() {
+//         console.log('Document is deleted')
+//     }
+// }
+//
+// class PublishDocumentItemState extends DocumentItemState{
+//     constructor() {
+//         super()
+//         this.name = 'PublishDocument'
+//     }
+//
+//     public publish() {
+//         console.log('Cannot publish published document')
+//     }
+//     public delete() {
+//         console.log('Removed from published')
+//         this.item.setState(new  DraftDocumentItemState())
+//     }
+// }
+//
+// const item = new DocumentItem()
+// item.text = 'my post'
+// console.log(item.getState())
+// item.publishDoc()
+// console.log(item.getState())
+// item.publishDoc()
+// item.deleteDoc()
+// console.log(item.getState())
 
 
+//  Strategy
+// class User {
+//     githubToken:string
+//     jwtToken:string
+// }
+//
+// interface AuthStrategy {
+//     auth(user:User):boolean
+// }
+//
+// class Auth {
+//     constructor(private strategy:AuthStrategy) {
+//     }
+//     setStrategy(strategy:AuthStrategy) {
+//         this.strategy =strategy
+//     }
+//     public authUser(user:User):boolean {
+//         return this.strategy.auth(user)
+//     }
+// }
+//
+// class JWTStrategy implements AuthStrategy {
+//     auth(user: User): boolean {
+//         return !!user.jwtToken;
+//
+//     }
+// }
+//
+// class GithubStrategy implements AuthStrategy {
+//     auth(user: User): boolean {
+//         return !!user.githubToken;
+//
+//     }
+// }
+//
+// const user = new User();
+// user.jwtToken = 'token'
+// const auth = new Auth(new JWTStrategy())
+// console.log(auth.authUser(user))
+// auth.setStrategy(new GithubStrategy())
+// console.log(auth.authUser(user))
 
+// Iterator
 
+// class Task {
+//     constructor(public priority:number) {
+//     }
+// }
+//
+// class TaskList {
+//     private tasks:Task[]=[]
+//
+//     public sortByPriority() {
+//         this.tasks = this.tasks.sort((a,b) => {
+//             if(a.priority > b.priority) {
+//                 return 1
+//             }else if(a.priority == b.priority) {
+//                 return 0
+//             }
+//             return -1
+//         })
+//     }
+//
+//     addTask(task:Task) {
+//         this.tasks.push(task)
+//     }
+//
+//     getTask() {
+//         return this.tasks
+//     }
+//
+//     count() {
+//         return this.tasks.length
+//     }
+//
+//     public getIterator() {
+//         return new PriorityTaskIterator(this)
+//     }
+// }
+//
+// interface IIterator<T> {
+//     current():T | undefined
+//     next():T | undefined
+//     prev():T | undefined
+//     index():number
+// }
+//
+// class PriorityTaskIterator implements IIterator<Task> {
+//     private position:number = 0
+//     private taskList: TaskList;
+//     constructor(taskList:TaskList) {
+//         taskList.sortByPriority()
+//         this.taskList = taskList
+//     }
+//     current(): Task | undefined {
+//         return this.taskList.getTask()[this.position]
+//     }
+// next(): Task | undefined {
+//         this.position += 1
+//     return this.taskList.getTask()[this.position]
+//
+// }
+// prev(): Task | undefined {
+//         this.position -=1
+//     return this.taskList.getTask()[this.position]
+//
+// }
+// index(): number {
+//         return  this.position
+// }
+// }
+//
+// const taskList = new TaskList()
+// taskList.count()
+// taskList.addTask(new Task(8))
+// taskList.addTask(new Task(1))
+// taskList.addTask(new Task(3))
+// const iterator = taskList.getIterator();
+// console.log(iterator.current())
+// console.log(iterator.next())
+// console.log(iterator.next())
+// console.log(iterator.prev())
+// console.log(iterator.index())
+// console.log(iterator.prev())
+// console.log(iterator.prev())
+// console.log(iterator.prev())
+// console.log(iterator.index())
 
+//template
 
+// class Form {
+//     constructor(public name:string) {
+//     }
+// }
+//
+// abstract class SaveForm<T> {
+//
+//     public save(form:Form){
+//         const res = this.fill(form);
+//         this.log(res)
+//         this.send(res)
+//     }
+//
+//     protected abstract fill(form:Form):T
+//
+//     protected log(data:T):void {
+//         console.log('log: ' + data)
+//     }
+//     protected abstract send(data:T):void
+//
+// }
+//
+// class FirstAPI extends SaveForm<string> {
+//     protected fill(form: Form): string {
+//         return form.name;
+//     }
+//
+//     protected send(data: string) {
+//         console.log('Sending' + data)
+//     }
+// }
+//
+// class SecondAPI extends SaveForm<{fio:string}> {
+//     protected fill(form: Form): {fio:string} {
+//         return {fio: form.name};
+//     }
+//
+//     protected send(data: {fio:string}) {
+//         console.log('Sending' + data)
+//     }
+// }
+//
+// const firstForm = new  FirstAPI();
+// firstForm.save(new Form('Vas'))
+//
+// const secondForm = new  SecondAPI();
+// secondForm.save(new Form('Pet'))
 
+// Observer
 
-
-
-
+// interface Observer {
+//     update(subject: Subject): void
+// }
+//
+// interface Subject {
+//     attach(observer: Observer): void
+//
+//     detach(observer: Observer): void
+//
+//     notify(): void
+// }
+//
+// class Lead {
+//     constructor(public name: string, public phone: string) {
+//     }
+// }
+//
+// class NewLead implements Subject {
+//     private ovservers: Observer[] = [];
+//     public state: Lead;
+//
+//     attach(observer: Observer) {
+//         if (this.ovservers.includes(observer)) {
+//             return
+//         }
+//         this.ovservers.push(observer)
+//     }
+//
+//     detach(observer: Observer) {
+//         const observerIndex = this.ovservers.indexOf(observer);
+//         if (observerIndex == -1) {
+//             return
+//         }
+//         this.ovservers.splice(observerIndex, 1)
+//     }
+//
+//     notify() {
+//         for (const observer of this.ovservers) {
+//             observer.update(this)
+//         }
+//     }
+// }
+//
+// class NotificationService implements Observer {
+//     update(subject: Subject) {
+//         console.log('NotificationService received notification')
+//         console.log(subject)
+//     }
+// }
+//
+// class LeadService implements Observer {
+//     update(subject: Subject) {
+//         console.log('LeadService received notification')
+//         console.log(subject)
+//     }
+// }
+//
+// const subject = new NewLead()
+// subject.state = new Lead('Ant', '43434')
+// const s1 = new NotificationService()
+// const s2 = new LeadService()
+//
+// subject.attach(s1)
+// subject.attach(s2)
+// subject.notify()
+// subject.detach(s1)
+// subject.notify()

@@ -26,5 +26,5 @@ yarn-error.log*
 .cache/
 .idea/
 
-# cepress
+# cypress
 cypress/screenshots/**
